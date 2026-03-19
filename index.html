@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plant a Moment - Event Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ---------- BODY ---------- */
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:#0F2A1F;
+color:#FFF7E2;
+overflow-x:hidden;
+position:relative;
+transition: background 0.8s ease;
+}
+
+/* PARTICLES */
+#particles{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+}
+
+/* HEADER */
+header{text-align:center;padding:25px 15px 10px;}
+.logo{width:250px;margin-bottom:10px;}
+.event-desc{
+max-width:720px;margin:auto;
+font-family:'Playfair Display',serif;
+font-size:17px;line-height:1.7;color:#e6efe6;
+}
+
+/* SECTION */
+section{width:85%;max-width:900px;margin:25px auto;}
+
+/* TABLE */
+table{
+width:100%;border-collapse:collapse;
+background:#F4EEDC;color:#0F2A1F;
+border-radius:6px;overflow:hidden;
+}
+th,td{border:1px solid #8BA194;padding:12px 10px;text-align:left;}
+th{background:#8BA194;}
+
+/* FORM */
+form{background:#F4EEDC;padding:20px;color:#0F2A1F;border-radius:6px;}
+
+fieldset{
+border:2px solid #4F633D;
+margin-bottom:18px;padding:15px;
+border-radius:6px;transition:0.3s;
+}
+fieldset.error{border-color:red;}
+fieldset.valid{border-color:green;}
+
+input,select,textarea{
+width:100%;padding:8px;margin-top:5px;margin-bottom:12px;
+border:1px solid #8BA194;border-radius:4px;
+font-family:'Poppins';
+box-sizing:border-box;
+}
+
+/* Radio alignment fix */
+.radio-group{
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+gap:16px;
+margin-top:6px;
+margin-bottom:12px;
+}
+.radio-group label{
+display:flex;
+align-items:center;
+gap:5px;
+cursor:pointer;
+font-size:14px;
+}
+.radio-group input[type="radio"]{
+width:auto;
+margin:0;
+padding:0;
+cursor:pointer;
+}
+
+.mode-group{
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+gap:16px;
+margin-top:8px;
+margin-bottom:12px;
+}
+.mode-group label{
+display:flex;
+align-items:center;
+gap:5px;
+cursor:pointer;
+font-size:14px;
+}
+.mode-group input[type="radio"]{
+width:auto;
+margin:0;
+padding:0;
+cursor:pointer;
+}
+
+.buttons{text-align:center;}
+button{
+background:#4F633D;color:white;border:none;
+padding:10px 18px;margin:5px;
+cursor:pointer;border-radius:5px;
+transition:.3s;
+}
+button:hover{background:#0F2A1F;transform:scale(1.05);}
+
+footer{text-align:center;background:#4F633D;padding:15px;margin-top:30px;}
+
+#plantPreview{text-align:center;font-size:60px;margin:10px 0;transition:transform 0.3s ease;}
+#plantName{text-align:center;font-weight:bold;color:#4F633D;margin-bottom:10px;}
+
+/* POPUP OVERLAY */
+#popupOverlay{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.5);
+z-index:1199;
+backdrop-filter:blur(2px);
+}
+
+/* SUCCESS POPUP */
+#popupSuccess{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(0.85);
+background:#F4EEDC;
+color:#0F2A1F;
+padding:36px 44px 30px;
+border-radius:16px;
+text-align:center;
+box-shadow:0 20px 60px rgba(0,0,0,0.4);
+z-index:1200;
+width:460px;
+max-width:92vw;
+box-sizing:border-box;
+opacity:0;
+transition:all 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+#popupSuccess.show{
+display:block;
+opacity:1;
+transform:translate(-50%,-50%) scale(1);
+}
+#popupSuccess .popup-emoji{
+font-size:48px;
+margin-bottom:10px;
+line-height:1;
+}
+#popupSuccess .popup-name{
+font-family:'Playfair Display',serif;
+font-size:20px;
+font-weight:600;
+color:#0F2A1F;
+margin-bottom:10px;
+line-height:1.4;
+}
+#popupSuccess .popup-personality{
+font-size:14px;
+color:#4F633D;
+font-style:italic;
+margin-bottom:24px;
+line-height:1.6;
+padding:10px 14px;
+background:rgba(79,99,61,0.1);
+border-radius:8px;
+border-left:3px solid #4F633D;
+text-align:left;
+}
+#popupOkBtn{
+background:#4F633D;
+color:white;
+border:none;
+padding:11px 48px;
+border-radius:8px;
+font-size:15px;
+font-family:'Poppins',sans-serif;
+font-weight:500;
+cursor:pointer;
+transition:.3s;
+display:block;
+margin:0 auto;
+}
+#popupOkBtn:hover{
+background:#0F2A1F;
+transform:scale(1.04);
+}
+
+/* CONFETTI */
+.confetti-piece{
+position:fixed;
+width:9px;height:15px;
+top:-20px;
+z-index:1100;
+border-radius:2px;
+animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+0%{transform:translateY(0) rotate(0deg);opacity:1;}
+100%{transform:translateY(102vh) rotate(720deg);opacity:0;}
+}
+
+/* Participants table */
+#participantsTable{width:100%;border-collapse:collapse;background:#F4EEDC;color:#0F2A1F;border-radius:6px;overflow:hidden;}
+#participantsTable th,#participantsTable td{border:1px solid #8BA194;padding:10px;text-align:left;font-size:13px;}
+#participantsTable th{background:#8BA194;}
+.del-btn{background:#c0392b;color:white;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;}
+.del-btn:hover{background:#922b21;}
+
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<header>
+<img src="https://i.ibb.co/Sw4Mh0Zx/20260222-113703.png" class="logo">
+<p class="event-desc">
+Plant a Moment is a 30-Day Plant Adoption Challenge encouraging students
+to nurture a plant and promote environmental responsibility.
+</p>
+</header>
+
+<section>
+<h2>Event Information</h2>
+<table>
+<tr><th>Event Date</th><td>15 March 2026</td></tr>
+<tr><th>Time</th><td>10:00 AM – 1:00 PM</td></tr>
+<tr><th>Venue</th><td>College Eco Park</td></tr>
+<tr><th>Organizer</th><td>Green Campus Club</td></tr>
+<tr><th>Participation Fee</th><td>Free Registration — ₹100 per plant</td></tr>
+<tr><th>Prize</th><td>Win exciting prizes and free certification</td></tr>
+</table>
+</section>
+
+<section>
+<h2>Event Registration Form</h2>
+<form id="regForm" novalidate>
+
+<fieldset id="fsPersonal">
+<legend>Personal Information</legend>
+<label for="name" style="font-size:13px;font-weight:500;color:#4F633D;">Full Name</label>
+<input type="text" id="name" placeholder="Enter your full name">
+
+<label for="email" style="font-size:13px;font-weight:500;color:#4F633D;">Email Address</label>
+<input type="email" id="email" placeholder="example@email.com">
+
+<label for="phone" style="font-size:13px;font-weight:500;color:#4F633D;">Phone Number</label>
+<input type="tel" id="phone" placeholder="Enter 10-digit phone number">
+
+<label for="dob" style="font-size:13px;font-weight:500;color:#4F633D;">Date of Birth</label>
+<input type="date" id="dob" placeholder="DD/MM/YYYY">
+
+<label style="font-size:13px;font-weight:500;color:#4F633D;display:block;margin-bottom:4px;">Gender</label>
+<div class="radio-group">
+  <label><input type="radio" name="gender" value="Male"> Male</label>
+  <label><input type="radio" name="gender" value="Female"> Female</label>
+  <label><input type="radio" name="gender" value="Other"> Other</label>
+</div>
+</fieldset>
+
+<fieldset id="fsPlant">
+<legend>Plant Selection</legend>
+
+<label for="plant" style="font-size:13px;font-weight:500;color:#4F633D;">Choose Your Plant</label>
+<select id="plant">
+<option value="">--Select Plant--</option>
+<option value="🌹">🌹 Rose</option>
+<option value="🌵">🌵 Cactus</option>
+<option value="🌿">🌿 Tulsi</option>
+<option value="🌼">🌼 Marigold</option>
+</select>
+
+<label for="qty" style="font-size:13px;font-weight:500;color:#4F633D;">Quantity (1–5)</label>
+<input type="number" id="qty" value="1" min="1" max="5" placeholder="Enter quantity">
+
+<div id="plantPreview">🌱</div>
+<div id="plantName">Select your plant</div>
+
+<h3>Total Amount: ₹<span id="total">100</span></h3>
+
+<label style="font-size:13px;font-weight:500;color:#4F633D;display:block;margin-bottom:6px;">🏫 Mode of Participation</label>
+<div class="mode-group">
+  <label><input type="radio" name="mode" value="At Campus"> At Campus</label>
+  <label><input type="radio" name="mode" value="At Home"> At Home</label>
+</div>
+
+</fieldset>
+
+<fieldset id="fsAdditional">
+<legend>Additional Details</legend>
+<label for="college" style="font-size:13px;font-weight:500;color:#4F633D;">College Name</label>
+<input type="text" id="college" placeholder="Enter your college name">
+<label for="comments" style="font-size:13px;font-weight:500;color:#4F633D;">Comments (Optional)</label>
+<textarea id="comments" placeholder="Any special requests or comments..."></textarea>
+</fieldset>
+
+<div style="margin-bottom:12px;">
+<label style="display:flex;align-items:center;gap:8px;color:#0F2A1F;font-size:14px;">
+  <input type="checkbox" id="agree" style="width:auto;margin:0;padding:0;">
+  I confirm that I will nurture the adopted plant.
+</label>
+</div>
+
+<div class="buttons">
+<button type="submit">Adopt My Plant 🌱</button>
+<button type="button" onclick="resetForm()">Reset</button>
+</div>
+
+</form>
+</section>
+
+<section>
+<h2>Registered Participants</h2>
+<table id="participantsTable">
+<thead>
+<tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Plant</th><th>Mode</th><th>Action</th></tr>
+</thead>
+<tbody id="participantBody"></tbody>
+</table>
+</section>
+
+<div id="popupOverlay"></div>
+<div id="popupSuccess"></div>
+
+<footer>
+  <div style="background:#4F633D;padding:20px 15px;text-align:center;color:#FFF7E2;font-family:'Poppins',sans-serif;">
+     <p>Contact Email: greencampus@college.edu</p>
+    <p>Help Desk: +91 98765 43210</p>
+    <p style="margin:0;font-size:11px;color:#A3BFA4;">© 2026 Green Campus Club. All rights reserved. &nbsp;|&nbsp; Designed with 💚 for a greener tomorrow</p>
+  </div>
+</footer>
+
+<script>
+
+/* ===== PARTICLES ===== */
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+window.addEventListener('resize', () => { canvas.width = innerWidth; canvas.height = innerHeight; });
+
+let particleColors = ["#8BA194","#4F633D","#A3BFA4","#C7D9B4"];
+let particles = [];
+
+function makeParticles(colArr) {
+  particles = [];
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 3 + 1,
+      dx: (Math.random() - 0.5) * 0.5,
+      dy: (Math.random() - 0.5) * 0.5,
+      color: colArr[Math.floor(Math.random() * colArr.length)]
+    });
+  }
+}
+makeParticles(particleColors);
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.dx; p.y += p.dy;
+    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ===== PLANT DATA ===== */
+const plantNames = {
+  "🌹": "Rose",
+  "🌵": "Cactus",
+  "🌿": "Tulsi",
+  "🌼": "Marigold"
+};
+
+const personalities = {
+  "🌹": "You have a passionate and expressive personality.",
+  "🌵": "You are strong and beautifully resilient.",
+  "🌿": "You have a warm and nurturing personality.",
+  "🌼": "You spread positivity wherever you go."
+};
+
+// Soft gradients — not eye-burning
+const plantThemes = {
+  "🌹": {
+    bg: "linear-gradient(135deg, #2a1020 0%, #4a2030 50%, #1a0f18 100%)",
+    particles: ["#c4778a","#e8b4be","#a05568","#f0d0d8"]
+  },
+  "🌵": {
+    bg: "linear-gradient(135deg, #0F2A1F 0%, #1a3528 50%, #0d2218 100%)",
+    particles: ["#8BA194","#4F633D","#A3BFA4","#C7D9B4"]
+  },
+  "🌿": {
+    bg: "linear-gradient(135deg, #142b14 0%, #1e3d1e 50%, #0f2010 100%)",
+    particles: ["#7aad6a","#c8e6c0","#5a8f4a","#a8d8a0"]
+  },
+  "🌼": {
+    bg: "linear-gradient(135deg, #2b2410 0%, #3a3018 50%, #201c0c 100%)",
+    particles: ["#c8a840","#e8d898","#a88830","#f0e8b0"]
+  }
+};
+
+const defaultBg = "#0F2A1F";
+
+/* ===== PLANT CHANGE ===== */
+const plantEl = document.getElementById("plant");
+const previewEl = document.getElementById("plantPreview");
+const qtyEl = document.getElementById("qty");
+const totalEl = document.getElementById("total");
+const plantNameEl = document.getElementById("plantName");
+
+function updatePlant() {
+  const p = plantEl.value;
+  previewEl.textContent = p || "🌱";
+  previewEl.style.transform = "scale(1.2)";
+  setTimeout(() => previewEl.style.transform = "scale(1)", 300);
+  plantNameEl.textContent = plantNames[p] || "Select your plant";
+  totalEl.textContent = (qtyEl.value || 1) * 100;
+
+  if (plantThemes[p]) {
+    document.body.style.background = plantThemes[p].bg;
+    // Gradually shift particle colors
+    const newColors = plantThemes[p].particles;
+    particles.forEach(part => {
+      part.color = newColors[Math.floor(Math.random() * newColors.length)];
+    });
+  } else {
+    document.body.style.background = defaultBg;
+    particles.forEach(part => {
+      part.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+    });
+  }
+}
+
+plantEl.addEventListener('change', updatePlant);
+qtyEl.addEventListener('input', updatePlant);
+
+/* ===== CONFETTI ===== */
+function launchConfetti() {
+  const colors = ["#f4d03f","#f1948a","#85c1e9","#82e0aa","#f0b27a","#d7bde2"];
+  const total = 80;
+  for (let i = 0; i < total; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    // Left side: 0–45vw, right side: 55–100vw
+    const fromRight = i > total / 2;
+    piece.style.left = fromRight
+      ? (55 + Math.random() * 45) + "vw"
+      : (Math.random() * 45) + "vw";
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = (Math.random() * 1.5 + 2) + "s";
+    piece.style.animationDelay = (Math.random() * 0.5) + "s";
+    piece.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 4500);
+  }
+}
+
+/* ===== VALIDATION ===== */
+function validate() {
+  const nameVal = document.getElementById("name").value.trim();
+  const emailVal = document.getElementById("email").value.trim();
+  const phoneVal = document.getElementById("phone").value.trim();
+  const dobVal = document.getElementById("dob").value;
+  const genderVal = document.querySelector('input[name="gender"]:checked');
+  const plantVal = plantEl.value;
+  const modeVal = document.querySelector('input[name="mode"]:checked');
+  const collegeVal = document.getElementById("college").value.trim();
+  const agreeVal = document.getElementById("agree").checked;
+
+  const errors = [];
+
+  if (!nameVal) errors.push("Name is required.");
+  if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) errors.push("Valid email is required.");
+  if (!phoneVal || !/^\d{10}$/.test(phoneVal)) errors.push("Phone must be exactly 10 digits.");
+  if (!dobVal) errors.push("Date of birth is required.");
+  if (!genderVal) errors.push("Please select a gender.");
+  if (!plantVal) errors.push("Please select a plant.");
+  if (!modeVal) errors.push("Please select a mode (At Campus / At Home).");
+  if (!collegeVal) errors.push("College name is required.");
+  if (!agreeVal) errors.push("Please confirm you will nurture the plant.");
+
+  return errors;
+}
+
+/* ===== PARTICIPANTS TABLE ===== */
+const registeredEmails = new Set();
+let rowCount = 0;
+
+function addParticipantRow(data) {
+  rowCount++;
+  const tbody = document.getElementById("participantBody");
+  const tr = document.createElement("tr");
+  tr.id = "row-" + rowCount;
+  tr.innerHTML = `
+    <td>${rowCount}</td>
+    <td>${data.name}</td>
+    <td>${data.email}</td>
+    <td>${data.phone}</td>
+    <td>${data.plant} ${plantNames[data.plant] || ""}</td>
+    <td>${data.mode}</td>
+    <td><button class="del-btn" onclick="deleteRow('row-${rowCount}','${data.email}')">Delete</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function deleteRow(rowId, email) {
+  const row = document.getElementById(rowId);
+  if (row) row.remove();
+  registeredEmails.delete(email);
+}
+
+/* ===== FORM SUBMIT ===== */
+document.getElementById("regForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const errors = validate();
+  if (errors.length > 0) {
+    alert("Please fix the following:\n\n" + errors.join("\n"));
+    return;
+  }
+
+  const emailVal = document.getElementById("email").value.trim();
+  if (registeredEmails.has(emailVal)) {
+    alert("This email is already registered!");
+    return;
+  }
+
+  // Save values before reset
+  const nameVal = document.getElementById("name").value.trim();
+  const phoneVal = document.getElementById("phone").value.trim();
+  const plantVal = plantEl.value;
+  const modeVal = document.querySelector('input[name="mode"]:checked').value;
+
+  // Add to table
+  registeredEmails.add(emailVal);
+  addParticipantRow({
+    name: nameVal,
+    email: emailVal,
+    phone: phoneVal,
+    plant: plantVal,
+    mode: modeVal
+  });
+
+  // Show popup FIRST (before reset)
+  const popup = document.getElementById("popupSuccess");
+  const overlay = document.getElementById("popupOverlay");
+  popup.innerHTML = `
+    <div class="popup-emoji">${plantVal}</div>
+    <div class="popup-name">${nameVal}, you planted a moment successfully ✨</div>
+    <div class="popup-personality">${personalities[plantVal] || "You are truly special! 🌱"}</div>
+    <button id="popupOkBtn" onclick="closePopupAndReset()">OK 🌱</button>
+  `;
+  overlay.style.display = "block";
+  popup.classList.add("show");
+
+  // Launch confetti — runs for 3-4s then disappears on its own
+  launchConfetti();
+});
+
+/* ===== CLOSE POPUP & RESET ===== */
+function closePopupAndReset() {
+  const popup = document.getElementById("popupSuccess");
+  const overlay = document.getElementById("popupOverlay");
+  popup.classList.remove("show");
+  overlay.style.display = "none";
+  setTimeout(() => { popup.style.display = "none"; }, 400);
+  resetForm();
+}
+
+/* ===== RESET ===== */
+function resetForm() {
+  document.getElementById("regForm").reset();
+  previewEl.textContent = "🌱";
+  plantNameEl.textContent = "Select your plant";
+  totalEl.textContent = "100";
+  document.body.style.background = defaultBg;
+  particles.forEach(p => {
+    p.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+  });
+}
+
+</script>
+</body>
+</html>
